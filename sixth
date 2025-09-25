@@ -1,0 +1,193 @@
+-- Q1) Procedure to print square of a number
+
+-- 1. Using IN
+CREATE OR REPLACE PROCEDURE p1(num IN NUMBER)
+IS
+    sq NUMBER;
+BEGIN
+    sq := num * num;
+    DBMS_OUTPUT.PUT_LINE('The square of a number is: ' || sq);
+END;
+/
+EXEC p1(10);
+
+-- 2. Using IN and OUT
+CREATE OR REPLACE PROCEDURE p2(num IN NUMBER, sq OUT NUMBER)
+IS
+BEGIN
+    sq := num * num;
+END;
+/
+VARIABLE v NUMBER;
+EXEC p2(10, :v);
+PRINT v;
+
+-- 3. Using IN OUT
+CREATE OR REPLACE PROCEDURE p3(num IN OUT NUMBER)
+IS
+BEGIN
+    num := num * num;
+END;
+/
+DECLARE
+    var NUMBER := &var;
+BEGIN
+    p3(var);
+    DBMS_OUTPUT.PUT_LINE(var);
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q2) Procedure for addition, subtraction, multiplication, and division
+
+-- Using IN
+CREATE OR REPLACE PROCEDURE p1(A IN NUMBER, B IN NUMBER)
+IS
+    add NUMBER;
+    sub NUMBER;
+    mul NUMBER;
+    div NUMBER;
+BEGIN
+    add := A + B;
+    sub := A - B;
+    mul := A * B;
+    div := A / B;
+    DBMS_OUTPUT.PUT_LINE(add || '  ' || sub || '  ' || mul || '  ' || div);
+END;
+/
+
+-- Using OUT
+CREATE OR REPLACE PROCEDURE p1(
+    A IN NUMBER,
+    B IN NUMBER,
+    add OUT NUMBER,
+    sub OUT NUMBER,
+    mul OUT NUMBER,
+    div OUT NUMBER)
+IS
+BEGIN
+    add := A + B;
+    sub := A - B;
+    mul := A * B;
+    div := A / B;
+END;
+/
+VARIABLE v NUMBER;
+VARIABLE b NUMBER;
+VARIABLE c NUMBER;
+VARIABLE d NUMBER;
+EXEC p1(20, 30, :v, :b, :c, :d);
+PRINT c;
+
+-- Using IN OUT
+CREATE OR REPLACE PROCEDURE p1(
+    n1 IN OUT NUMBER,
+    n2 IN OUT NUMBER,
+    mul OUT NUMBER,
+    div OUT NUMBER)
+IS
+    t1 NUMBER;
+    t2 NUMBER;
+BEGIN
+    t1 := n1 + n2;
+    t2 := n1 - n2;
+    mul := n1 * n2;
+    div := n1 / n2;
+    n1 := t1;
+    n2 := t2;
+END;
+/
+DECLARE
+    a NUMBER := &a;
+    b NUMBER := &b;
+    c NUMBER;
+    d NUMBER;
+BEGIN
+    p1(a, b, c, d);
+    DBMS_OUTPUT.PUT_LINE(a || '  ' || b || '  ' || c || '  ' || d);
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q3) Procedure to check even or odd
+CREATE OR REPLACE PROCEDURE p1(n IN NUMBER)
+IS
+BEGIN
+    IF MOD(n, 2) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Number is even');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Number is odd');
+    END IF;
+END;
+/
+EXEC p1(3);
+
+--------------------------------------------------------------------------------
+-- Q4) Procedure to calculate salary increase
+CREATE OR REPLACE PROCEDURE calculate_salary_increase(
+    p_empno IN NUMBER,
+    p_percentage IN NUMBER)
+IS
+    v_salary NUMBER;
+    v_new_salary NUMBER;
+BEGIN
+    SELECT sal INTO v_salary
+    FROM empt
+    WHERE empno = p_empno;
+
+    v_new_salary := v_salary + (v_salary * p_percentage / 100);
+
+    DBMS_OUTPUT.PUT_LINE('Current Salary: ' || v_salary);
+    DBMS_OUTPUT.PUT_LINE('New Salary: ' || v_new_salary);
+    DBMS_OUTPUT.PUT_LINE('Salary Increase: ' || (v_new_salary - v_salary));
+END;
+/
+DECLARE
+    v_empno NUMBER;
+    v_percentage NUMBER;
+BEGIN
+    v_empno := &empno;
+    v_percentage := &percentage;
+    calculate_salary_increase(v_empno, v_percentage);
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q5) Nested procedure calls
+DECLARE
+    PROCEDURE p1 IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('from p1');
+        p2;
+    END;
+
+    PROCEDURE p2 IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('from p2');
+        p3;
+    END;
+
+    PROCEDURE p3 IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('from p3');
+    END;
+
+BEGIN
+    p1;
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q6) Procedure to insert record into dept table
+CREATE OR REPLACE PROCEDURE dept123(
+    num IN NUMBER,
+    name IN VARCHAR2,
+    location IN VARCHAR2)
+IS
+BEGIN
+    INSERT INTO dept VALUES(num, name, location);
+    COMMIT;
+END;
+/
+EXEC dept123(50, 'adam', 'mumbai');
+SELECT * FROM dept;
