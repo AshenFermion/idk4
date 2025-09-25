@@ -1,0 +1,116 @@
+--------------------------------------------------------------------------------
+-- Q1. Recursive function to compute factorial of a given number
+
+CREATE OR REPLACE FUNCTION factorial(n IN NUMBER)
+RETURN NUMBER
+IS
+BEGIN
+    IF n = 0 THEN
+        RETURN 1;
+    ELSE
+        RETURN n * factorial(n-1);
+    END IF;
+END;
+/
+
+-- Execution
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Factorial of 3 = ' || factorial(3));
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q2. Recursive function to generate the nth Fibonacci number
+
+CREATE OR REPLACE FUNCTION fibonacci(n IN NUMBER)
+RETURN NUMBER
+IS
+BEGIN
+    IF n = 0 THEN
+        RETURN 0;
+    ELSIF n = 1 THEN
+        RETURN 1;
+    ELSE
+        RETURN fibonacci(n-1) + fibonacci(n-2);
+    END IF;
+END;
+/
+
+-- Execution
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('5th Fibonacci Number = ' || fibonacci(5));
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q3. Recursive function to calculate the sum of first N natural numbers
+
+CREATE OR REPLACE FUNCTION first_sum(n IN NUMBER)
+RETURN NUMBER
+IS
+BEGIN
+    IF n = 0 THEN
+        RETURN 0;
+    ELSE
+        RETURN n + first_sum(n-1);
+    END IF;
+END;
+/
+
+-- Execution
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Sum of first 7 numbers = ' || first_sum(7));
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q4. Recursive function to find the power of a number (x^n)
+
+CREATE OR REPLACE FUNCTION power(x IN NUMBER, n IN NUMBER)
+RETURN NUMBER
+IS
+BEGIN
+    IF n = 0 THEN
+        RETURN 1;
+    ELSE
+        RETURN x * power(x, n-1);
+    END IF;
+END;
+/
+
+-- Execution
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('2^5 = ' || power(2, 5));
+END;
+/
+
+--------------------------------------------------------------------------------
+-- Q5. Recursive function to check whether a given number or string is a palindrome
+
+CREATE OR REPLACE FUNCTION is_palindrome(n IN VARCHAR2, i IN NUMBER DEFAULT 1)
+RETURN VARCHAR2
+IS
+    len NUMBER := LENGTH(n);
+BEGIN
+    IF i > len/2 THEN
+        RETURN 'Palindrome';
+    ELSIF SUBSTR(n, i, 1) != SUBSTR(n, len-i+1, 1) THEN
+        RETURN 'Not Palindrome';
+    ELSE
+        RETURN is_palindrome(n, i+1);
+    END IF;
+END;
+/
+
+-- Execution Examples
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('121 -> ' || is_palindrome('121'));
+    DBMS_OUTPUT.PUT_LINE('123 -> ' || is_palindrome('123'));
+END;
+/
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Madam -> ' || is_palindrome('madam'));
+    DBMS_OUTPUT.PUT_LINE('hello -> ' || is_palindrome('hello'));
+END;
+/
