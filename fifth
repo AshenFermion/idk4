@@ -1,0 +1,89 @@
+--Q1) Demonstrate the use of NULL statement. 
+    Write a block in PL/SQL to display the details of Dept table 
+    and run NULL statement in the loop to observe the behavior. 
+
+DECLARE 
+    record scott.dept%ROWTYPE; 
+    i NUMBER := 10; 
+BEGIN 
+    LOOP 
+        NULL; 
+        SELECT * INTO record FROM scott.dept WHERE deptno = i; 
+        DBMS_OUTPUT.PUT_LINE(record.deptno || '  ' || record.dname || '  ' || record.loc); 
+        i := i + 10; 
+        EXIT WHEN i = 40; 
+    END LOOP; 
+END; 
+/
+
+---------------------------------------------------------------
+
+--Q2) Demonstrate GoTo Statement and its working. 
+    Display details of dept table as department no and dname for all records 
+    except when dept name is OPERATIONS. In case of OPERATIONS department, 
+    display the locations as well. 
+
+DECLARE 
+    i  NUMBER := 1; 
+    j  NUMBER := 10; 
+    dn VARCHAR2(50); 
+    l  VARCHAR2(50); 
+BEGIN 
+    WHILE i <= 4 LOOP 
+        SELECT dname INTO dn FROM scott.dept WHERE deptno = j; 
+        IF dn = 'OPERATIONS' THEN 
+            GOTO l1; 
+        ELSE 
+            DBMS_OUTPUT.PUT_LINE(j || '  ' || dn); 
+        END IF; 
+        j := j + 10; 
+        i := i + 1; 
+    END LOOP; 
+
+    <<l1>> 
+    SELECT loc INTO l FROM scott.dept WHERE deptno = j; 
+    DBMS_OUTPUT.PUT_LINE(j || '  ' || dn || '  ' || l); 
+END; 
+/
+
+---------------------------------------------------------------
+
+--Q3) Demonstrate use of NULL inside IF block. 
+    Write a PL/SQL block that accepts the age of a person from the user. 
+    If the entered age is less than 18, use the NULL statement inside the IF block 
+    to indicate that no action should be taken. 
+    If the age is 18 or more, display a message stating that the person is eligible to vote. 
+
+DECLARE 
+    age NUMBER := &Enter_Age; 
+BEGIN 
+    IF age < 18 THEN 
+        NULL; 
+    ELSE 
+        DBMS_OUTPUT.PUT_LINE('Eligible to Vote'); 
+    END IF; 
+END; 
+/
+
+---------------------------------------------------------------
+
+--Q4) Write a PL/SQL block that checks the department name. 
+    If the department is 'HR', use the GOTO statement to jump to a label 
+    and perform special handling for HR, such as displaying a custom welcome message 
+    and HR-specific rules. For all other departments, print a normal department message. 
+
+DECLARE 
+    deptname VARCHAR2(20) := 'HR'; 
+BEGIN 
+    IF deptname = 'HR' THEN 
+        GOTO special; 
+    END IF; 
+
+    DBMS_OUTPUT.PUT_LINE('Normal department. No special handling required.'); 
+    RETURN; 
+
+    <<special>> 
+    DBMS_OUTPUT.PUT_LINE('*** Welcome to the Human Resources Department ***'); 
+    DBMS_OUTPUT.PUT_LINE('Note: All employee onboarding and payroll policies are handled here.'); 
+END; 
+/
