@@ -1,0 +1,109 @@
+-- Q1. View all employee details from the EMP table
+SELECT * FROM scott.emp;
+
+-- Q2. Print the salary of a specific employee with empno = 7902
+DECLARE 
+  s NUMBER(5); 
+BEGIN 
+  SELECT sal INTO s FROM scott.emp WHERE empno = 7902; 
+  DBMS_OUTPUT.PUT_LINE('Salary of the employee is ' || s); 
+END;
+/
+
+-- Q3. Accept employee number from user and print salary
+DECLARE 
+  s NUMBER(5); 
+  eno NUMBER := &empno; 
+BEGIN 
+  SELECT sal INTO s FROM scott.emp WHERE empno = eno; 
+  DBMS_OUTPUT.PUT_LINE('Salary of the employee is ' || s); 
+END;
+/
+
+-- Q4. Accept employee number and print salary + commission
+DECLARE 
+  s NUMBER(5); 
+  c NUMBER(5); 
+  t NUMBER(10); 
+  eno NUMBER := &empno; 
+BEGIN 
+  SELECT sal, comm INTO s, c FROM scott.emp WHERE empno = eno; 
+  t := s + c; 
+  DBMS_OUTPUT.PUT_LINE('Total salary (salary + commission) is ' || t); 
+END;
+/
+
+-- Q5. Handle NULL commission using NVL()
+DECLARE 
+  s NUMBER(5); 
+  c NUMBER(5); 
+  t NUMBER(10); 
+  eno NUMBER := &empno; 
+BEGIN 
+  SELECT sal, NVL(comm, 0) INTO s, c FROM scott.emp WHERE empno = eno; 
+  t := s + c; 
+  DBMS_OUTPUT.PUT_LINE('Total salary (with NULL-safe commission) is ' || t); 
+END;
+/
+
+-- Q6. Use %ROWTYPE to print total salary
+DECLARE 
+  details scott.emp%ROWTYPE; 
+  t NUMBER(10); 
+  eno NUMBER := &empno; 
+BEGIN 
+  SELECT * INTO details FROM scott.emp WHERE empno = eno; 
+  t := details.sal + NVL(details.comm, 0); 
+  DBMS_OUTPUT.PUT_LINE('Total salary is ' || t); 
+END;
+/
+
+-- Q7. Display employee name and department number by empno
+DECLARE 
+  ename VARCHAR2(10); 
+  deptno NUMBER; 
+BEGIN 
+  SELECT ename, deptno INTO ename, deptno FROM scott.emp WHERE empno = &eno; 
+  DBMS_OUTPUT.PUT_LINE('Name: ' || ename || ', Dept: ' || deptno); 
+END;
+/
+
+-- Q8. Create STUDENT table
+CREATE TABLE student ( 
+  rollno NUMBER(5), 
+  name VARCHAR2(10), 
+  class VARCHAR2(10), 
+  fees NUMBER(10), 
+  address VARCHAR2(10), 
+  contno NUMBER(10) 
+);
+
+-- Q9. Insert sample data into STUDENT table
+INSERT INTO student VALUES (101, 'Tom', 'Sycs', 32000, 'Sion', 9874563210); 
+INSERT INTO student VALUES (102, 'Scarlet', 'Sycs', 30000, 'Matunga', 9874563220); 
+INSERT INTO student VALUES (103, 'Romona', 'Syit', 29000, 'Kurla', 9874563230); 
+INSERT INTO student VALUES (104, 'Chris', 'Syit', 28500, 'Mahim', 9874563240); 
+INSERT INTO student VALUES (105, 'Stark', 'Sycs', 32000, 'Vile parle', 9874563250);
+
+-- Q10. Display all students
+SELECT * FROM student;
+
+-- Q11. Accept roll number and print class and contact number
+DECLARE 
+  c VARCHAR2(10); 
+  co NUMBER(10); 
+BEGIN 
+  SELECT class, contno INTO c, co FROM student WHERE rollno = &r; 
+  DBMS_OUTPUT.PUT_LINE('Class: ' || c || ', Contact No: ' || co); 
+END;
+/
+
+-- Q12. Print name and address based on roll number
+DECLARE 
+  n VARCHAR2(10); 
+  a VARCHAR2(10); 
+BEGIN 
+  SELECT name, address INTO n, a FROM student WHERE rollno = &roll; 
+  DBMS_OUTPUT.PUT_LINE('Name: ' || n || ', Address: ' || a); 
+END;
+/
