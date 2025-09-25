@@ -1,0 +1,142 @@
+-- Q1) Increase salary based on date of joining
+CREATE TABLE empt ( 
+  empno     NUMBER(4) PRIMARY KEY, 
+  ename     VARCHAR2(20), 
+  hiredate  DATE, 
+  sal       NUMBER(10,2) 
+);
+
+INSERT INTO empt VALUES (7900, 'JAMES',  TO_DATE('03-DEC-1981', 'DD-MON-YYYY'), 2000); 
+INSERT INTO empt VALUES (7901, 'ALLEN',  TO_DATE('20-FEB-1981', 'DD-MON-YYYY'), 1800); 
+INSERT INTO empt VALUES (7902, 'FORD',   TO_DATE('01-JAN-1982', 'DD-MON-YYYY'), 2500); 
+INSERT INTO empt VALUES (7903, 'MILLER', TO_DATE('15-AUG-1983', 'DD-MON-YYYY'), 2200); 
+INSERT INTO empt VALUES (7904, 'WARD',   TO_DATE('10-MAR-1980', 'DD-MON-YYYY'), 2100); 
+INSERT INTO empt VALUES (7905, 'SCOTT',  TO_DATE('09-DEC-1982', 'DD-MON-YYYY'), 2600); 
+INSERT INTO empt VALUES (7906, 'ADAMS',  TO_DATE('23-MAY-1984', 'DD-MON-YYYY'), 2400); 
+INSERT INTO empt VALUES (7907, 'CLARK',  TO_DATE('11-APR-1981', 'DD-MON-YYYY'), 1950); 
+INSERT INTO empt VALUES (7908, 'BLAKE',  TO_DATE('30-JUN-1982', 'DD-MON-YYYY'), 2800); 
+INSERT INTO empt VALUES (7909, 'SMITH',  TO_DATE('05-MAY-1983', 'DD-MON-YYYY'), 2300); 
+
+DECLARE 
+  s   NUMBER(10); 
+  dt  DATE := TO_DATE('&dt', 'DD-MON-YY'); 
+  eno NUMBER := &eno; 
+  hdt DATE; 
+BEGIN 
+  SELECT hiredate, sal INTO hdt, s FROM empt WHERE empno = eno; 
+  IF hdt < dt THEN 
+    s := s + (s * 0.15); 
+  ELSE 
+    s := s + (s * 0.05); 
+  END IF; 
+  UPDATE empt SET sal = s WHERE empno = eno; 
+  DBMS_OUTPUT.PUT_LINE('Salary updated successfully.'); 
+END; 
+/
+
+-- Q2) Hotel room classification (CASE & IF)
+CREATE TABLE hotel ( 
+  roomid       NUMBER(10) PRIMARY KEY, 
+  building     NUMBER(10), 
+  no_of_rooms  NUMBER(10), 
+  types        VARCHAR2(20) 
+);
+
+INSERT INTO hotel VALUES (101, 1, 3, NULL); 
+INSERT INTO hotel VALUES (102, 1, 4, NULL); 
+INSERT INTO hotel VALUES (103, 2, 5, NULL); 
+INSERT INTO hotel VALUES (104, 2, 6, NULL); 
+INSERT INTO hotel VALUES (105, 3, 7, NULL); 
+INSERT INTO hotel VALUES (106, 3, 2, NULL); 
+INSERT INTO hotel VALUES (107, 4, 8, NULL); 
+INSERT INTO hotel VALUES (108, 4, 10, NULL); 
+INSERT INTO hotel VALUES (109, 5, 1, NULL); 
+INSERT INTO hotel VALUES (110, 5, 9, NULL); 
+
+-- CASE version
+DECLARE 
+  n   NUMBER; 
+  rid NUMBER := &roomnumber; 
+  a   VARCHAR2(20); 
+BEGIN 
+  SELECT no_of_rooms INTO n FROM hotel WHERE roomid = rid; 
+  a := CASE 
+         WHEN n BETWEEN 2 AND 4 THEN 'Fairly Small' 
+         WHEN n BETWEEN 5 AND 7 THEN 'Little Bigger' 
+         WHEN n >= 8 THEN 'Huge' 
+         ELSE 'Not Classified' 
+       END; 
+  DBMS_OUTPUT.PUT_LINE('Room Classification: ' || a); 
+END; 
+/
+
+-- IF...ELSIF version
+DECLARE 
+  n   NUMBER; 
+  rid NUMBER := &roomnumber; 
+BEGIN 
+  SELECT no_of_rooms INTO n FROM hotel WHERE roomid = rid; 
+  IF n BETWEEN 2 AND 4 THEN 
+    DBMS_OUTPUT.PUT_LINE('Room Classification: Fairly Small'); 
+  ELSIF n BETWEEN 5 AND 7 THEN 
+    DBMS_OUTPUT.PUT_LINE('Room Classification: Little Bigger'); 
+  ELSIF n >= 8 THEN 
+    DBMS_OUTPUT.PUT_LINE('Room Classification: Huge'); 
+  ELSE 
+    DBMS_OUTPUT.PUT_LINE('Room Classification: Not Classified'); 
+  END IF; 
+END; 
+/
+
+-- Q3) Lecturer subject → course mapping (CASE)
+CREATE TABLE lecturer ( 
+  lec_id        NUMBER(10) PRIMARY KEY, 
+  qualification VARCHAR2(20), 
+  subject       VARCHAR2(20), 
+  course        VARCHAR2(20) 
+);
+
+INSERT INTO lecturer VALUES (201, 'MSc',    'java', NULL);     
+INSERT INTO lecturer VALUES (202, 'MTech',  'bio', NULL);      
+INSERT INTO lecturer VALUES (203, 'PhD',    'cs', NULL);       
+INSERT INTO lecturer VALUES (204, 'MCA',    'it', NULL);       
+INSERT INTO lecturer VALUES (205, 'MBA',    'commerce', NULL); 
+INSERT INTO lecturer VALUES (206, 'MA',     'math', NULL);     
+INSERT INTO lecturer VALUES (207, 'MSc',    'cs', NULL);       
+INSERT INTO lecturer VALUES (208, 'MTech',  'it', NULL);       
+INSERT INTO lecturer VALUES (209, 'PhD',    'java', NULL);     
+INSERT INTO lecturer VALUES (210, 'MA',     'bio', NULL);      
+
+DECLARE 
+  lect_id NUMBER := &lectureid; 
+  s       VARCHAR2(20); 
+  course  VARCHAR2(20); 
+BEGIN 
+  SELECT subject INTO s FROM lecturer WHERE lec_id = lect_id; 
+  course := CASE s 
+              WHEN 'java' THEN 'bsc' 
+              WHEN 'bio'  THEN 'biology' 
+              WHEN 'cs'   THEN 'comp sci' 
+              WHEN 'it'   THEN 'info tech' 
+              ELSE 'no such subject' 
+            END; 
+  DBMS_OUTPUT.PUT_LINE('Course: ' || course); 
+END; 
+/
+
+-- Q4) Grade → performance appraisal (CASE)
+DECLARE 
+  grade     CHAR(1) := '&grade'; 
+  appraisal VARCHAR2(20); 
+BEGIN 
+  appraisal := CASE grade 
+                 WHEN 'A' THEN 'Excellent' 
+                 WHEN 'B' THEN 'Very Good' 
+                 WHEN 'C' THEN 'Good' 
+                 WHEN 'D' THEN 'Fair' 
+                 WHEN 'E' THEN 'Poor' 
+                 ELSE 'No such grade' 
+               END; 
+  DBMS_OUTPUT.PUT_LINE('Appraisal: ' || appraisal); 
+END; 
+/
