@@ -1,0 +1,66 @@
+-- Q1) Create the Sequence
+CREATE SEQUENCE s1 
+START WITH 201 
+INCREMENT BY 3 
+MAXVALUE 300;
+
+-- Fetch Values
+BEGIN 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+END;
+/
+
+-- Q2) Create a cycle sequence that starts at 51 and goes down
+CREATE SEQUENCE s3 
+START WITH 0 
+INCREMENT BY -1 
+MINVALUE -10 
+MAXVALUE 51 
+CYCLE;
+
+-- Fetch Values
+BEGIN 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s3.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s3.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s3.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s3.NEXTVAL); 
+END;
+/
+
+-- Q3) Alter the sequence created in Q1 (convert into CYCLE, cache 5)
+ALTER SEQUENCE s1 
+CYCLE 
+CACHE 5;
+
+-- Print More Values
+BEGIN 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+  DBMS_OUTPUT.PUT_LINE('Next value: ' || s1.NEXTVAL); 
+END;
+/
+
+-- Q4) Sequence starts from 1000 → 1050 with interval 1, insert into Student table
+-- Step 1: Create table
+CREATE TABLE students ( 
+  student_id NUMBER PRIMARY KEY, 
+  name VARCHAR2(50) 
+);
+
+-- Step 2: Create sequence
+CREATE SEQUENCE stud_seq 
+START WITH 1000 
+INCREMENT BY 1 
+MAXVALUE 1050;
+
+-- Step 3: Insert records
+INSERT INTO students VALUES (stud_seq.NEXTVAL, 'Anjali'); 
+INSERT INTO students VALUES (stud_seq.NEXTVAL, 'Rahul'); 
+INSERT INTO students VALUES (stud_seq.NEXTVAL, 'Sneha'); 
+
+-- Step 4: View the table
+SELECT * FROM students;
