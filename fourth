@@ -1,0 +1,96 @@
+--Q1) Write a PL/SQL Block to display the records of dept table using iterative 
+    control structures. 
+
+CREATE TABLE dept ( 
+    deptno NUMBER(2), 
+    dname  VARCHAR2(14), 
+    loc    VARCHAR2(13) 
+); 
+
+INSERT INTO dept VALUES (10, 'ACCOUNTING', 'NEW YORK'); 
+INSERT INTO dept VALUES (20, 'RESEARCH',   'DALLAS'); 
+INSERT INTO dept VALUES (30, 'SALES',      'CHICAGO'); 
+INSERT INTO dept VALUES (40, 'OPERATIONS', 'BOSTON'); 
+
+SELECT * FROM dept; 
+
+-- Using Basic Loop
+DECLARE 
+    record dept%ROWTYPE; 
+    i NUMBER := 10; 
+BEGIN 
+    LOOP 
+        SELECT * INTO record FROM dept WHERE deptno = i; 
+        DBMS_OUTPUT.PUT_LINE(record.deptno || '  ' || record.dname || '  ' || record.loc); 
+        i := i + 10; 
+        EXIT WHEN i = 50; 
+    END LOOP; 
+END; 
+/
+
+-- Using While Loop
+DECLARE 
+    record scott.dept%ROWTYPE; 
+    i NUMBER := 10; 
+BEGIN 
+    WHILE i <= 40 LOOP 
+        SELECT * INTO record FROM scott.dept WHERE deptno = i; 
+        DBMS_OUTPUT.PUT_LINE(record.deptno || '  ' || record.dname || '  ' || record.loc); 
+        i := i + 10; 
+    END LOOP; 
+END; 
+/
+
+-- Using For Loop
+DECLARE 
+    record scott.dept%ROWTYPE; 
+    d NUMBER := 10; 
+BEGIN 
+    FOR i IN 1..4 LOOP 
+        SELECT * INTO record FROM scott.dept WHERE deptno = d; 
+        DBMS_OUTPUT.PUT_LINE(record.deptno || '  ' || record.dname || '  ' || record.loc); 
+        d := d + 10; 
+    END LOOP; 
+END; 
+/
+
+-- Using %TYPE
+DECLARE 
+    a1 scott.dept.deptno%TYPE; 
+    a2 scott.dept.dname%TYPE; 
+    a3 scott.dept.loc%TYPE; 
+    i NUMBER := 10; 
+BEGIN 
+    LOOP 
+        SELECT deptno, dname, loc INTO a1, a2, a3 FROM scott.dept WHERE deptno = i; 
+        DBMS_OUTPUT.PUT_LINE(a1 || '  ' || a2 || '  ' || a3); 
+        i := i + 10; 
+        EXIT WHEN i = 50; 
+    END LOOP; 
+END; 
+/
+
+---------------------------------------------------------------
+
+--Q2) Write PL/SQL block to generate multiple rows in the areas table. 
+    If area becomes greater than 100 exit from the block. 
+    Calculate the area of a circle according to the radius value 
+    and insert it into the table. 
+
+CREATE TABLE area ( 
+    radius NUMBER(10), 
+    area   NUMBER(10,2) 
+); 
+
+DECLARE 
+    r NUMBER := 1; 
+    A NUMBER; 
+BEGIN 
+    LOOP 
+        A := 3.142 * r * r; 
+        EXIT WHEN A >= 100; 
+        INSERT INTO area VALUES (r, A); 
+        r := r + 1; 
+    END LOOP; 
+END; 
+/
